@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        Hello from Facelets #{index.name}
+        
+        <h:form>
+            
+                    <h:commandButton value="submit" type="submit" action="#{index.loadData()}" />
+
+        </h:form>
+        
+        <p:dataTable value="#{index.items}" var="o"
+    			styleClass="order-table"
+                           
+    		>
+
+    			<p:column sortBy="#{o.getAttr(0)}">
+    				<!-- column header -->
+    				<f:facet name="header">Order No</f:facet>
+    				<!-- row record -->
+    				#{o.getAttr(0)}
+    			</p:column>
+
+    			<p:column sortBy="#{o.getAttr(1)}">
+    				<f:facet name="header">Product Name</f:facet>
+    				#{o.getAttr(1)}
+    			</p:column>
+
+    			<p:column sortBy="#{o.getAttr(2)}">
+    				<f:facet name="header">Price</f:facet>
+    				#{o.getAttr(2)}
+    			</p:column>
+
+    			<p:column sortBy="#{o.getAttr(3)}">
+    				<f:facet name="header">Quantity</f:facet>
+    				#{o.getAttr(3)}
+    			</p:column>
+
+    		</p:dataTable>
+
+    </h:body>
+</html>
+
