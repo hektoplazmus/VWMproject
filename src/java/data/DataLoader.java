@@ -28,29 +28,40 @@ import javax.inject.Singleton;
 public class DataLoader {
     
     
-    public List<Item> items;
+    
     
     public  DataLoader() {
-        items = new ArrayList<Item>();
     }
     
-    public void load() {
+    public DataSet load(String fileName) {
+        DataSet dataSet = new DataSet();
+        
         try {
-            System.out.println("TADZ");
-            InputStream is = getClass().getClassLoader().getResourceAsStream("/data.csv");
+            System.out.println("loading dataset " + fileName);
+            
+            InputStream is = getClass().getClassLoader().getResourceAsStream("/" + fileName);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             CSVReader reader = new CSVReader(br);
             String [] nextLine;
+
+            nextLine = reader.readNext();
+            for (int i = 0; i < nextLine.length; i++) {
+                dataSet.getColumnNames().add(nextLine[i]);
+            }
+                        
             while ((nextLine = reader.readNext()) != null) {
                 Item newItem = new Item();
                 for (int i = 0; i < nextLine.length; i++) {
                     newItem.addAttr(nextLine[i]);
                 }
-                items.add(newItem);
-                // nextLine[] is an array of values from the line
-                System.out.println(nextLine[0] + " " + nextLine[1] );
-            }  } catch (IOException ex) {
+                dataSet.getItems().add(newItem);
+
+            }  
+        } catch (IOException ex) {
+            System.out.println("not loaded");
             Logger.getLogger(DataLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("succesfully loaded");
+        return dataSet;
     }
 }

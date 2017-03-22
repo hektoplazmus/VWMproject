@@ -3,47 +3,46 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>VWM project</title>
     </h:head>
     <h:body>
-        Hello from Facelets #{index.name}
-        
+        <h2>VWM Project - Treshold top(k) algorithm</h2>
+        <h5 style="float:right">made by Daniel Němec and Jan Pancíř</h5>
         <h:form>
-            
-                    <h:commandButton value="submit" type="submit" action="#{index.loadData()}" />
+            <div style="padding: 5px; float:left">
+                <p:selectOneMenu value="#{index.chosenDataSet}" style="width:125px; float: left">
+                    <f:selectItem itemLabel="notebooks" itemValue="notebooks" />
+                    <f:selectItem itemLabel="data" itemValue="data" />
+                </p:selectOneMenu>
 
+                <p:commandButton value="choose" id="nonAjax" actionListener="#{index.loadData()}" ajax="false"  style="margin-left: 10px; float: right"/>
+            </div>
         </h:form>
-        
+
         <p:dataTable value="#{index.items}" var="o"
-    			styleClass="order-table"
-                           
-    		>
+                     styleClass="order-table" rows="10"
+                     paginator="true" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     rowsPerPageTemplate="5,10,15" 
+                     style="float:left"
+                     > 
+            <p:ajax event="rowSelect" />
 
-    			<p:column sortBy="#{o.getAttr(0)}">
-    				<!-- column header -->
-    				<f:facet name="header">Order No</f:facet>
-    				<!-- row record -->
-    				#{o.getAttr(0)}
-    			</p:column>
+            <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
+                <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getAttr(i)}">
+                    <h:outputText value="#{o.getAttr(i)}" />
 
-    			<p:column sortBy="#{o.getAttr(1)}">
-    				<f:facet name="header">Product Name</f:facet>
-    				#{o.getAttr(1)}
-    			</p:column>
+                </p:column>
+            </c:forEach>
 
-    			<p:column sortBy="#{o.getAttr(2)}">
-    				<f:facet name="header">Price</f:facet>
-    				#{o.getAttr(2)}
-    			</p:column>
 
-    			<p:column sortBy="#{o.getAttr(3)}">
-    				<f:facet name="header">Quantity</f:facet>
-    				#{o.getAttr(3)}
-    			</p:column>
 
-    		</p:dataTable>
+
+
+        </p:dataTable>
 
     </h:body>
 </html>

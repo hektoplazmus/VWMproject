@@ -6,13 +6,14 @@
 package backing;
 
 import data.DataLoader;
+import data.DataSet;
 import data.Item;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-
 
 /**
  *
@@ -22,35 +23,38 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class Index {
 
-    private String name = "Ahoj"; 
     private DataLoader dl;
+    private DataSet dataSet;
+    private String chosenDataSet;
     private List<Item> items;
+    private List<String> columnNames;
     
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-
     public Index() {
-         dl = new DataLoader();
+        dl = new DataLoader();
+        items = new ArrayList<Item>();
+        columnNames = new ArrayList<String>();
+    }
+
+    public void loadData() {
+        dataSet = dl.load(chosenDataSet + ".csv");
+        setItems(dataSet.getItems());
+        setColumnNames(dataSet.getColumnNames());
+    }
+
+
+
+    /**
+     * @return the chosenDataSet
+     */
+    public String getChosenDataSet() {
+        return chosenDataSet;
     }
 
     /**
-     * @return the name
+     * @param chosenDataSet the chosenDataSet to set
      */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public void loadData(){
-        dl.load();
-        items = dl.items;
-        System.out.println("ITEMS " + items.size());
+    public void setChosenDataSet(String chosenDataSet) {
+        this.chosenDataSet = chosenDataSet;
     }
 
     /**
@@ -59,4 +63,31 @@ public class Index {
     public List<Item> getItems() {
         return items;
     }
+
+    /**
+     * @param items the items to set
+     */
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    /**
+     * @return the columnNames
+     */
+    public List<String> getColumnNames() {
+        return columnNames;
+    }
+
+    /**
+     * @param columnNames the columnNames to set
+     */
+    public void setColumnNames(List<String> columnNames) {
+        this.columnNames = columnNames;
+    }
+
+    public int getIterateIndex() {
+
+        return columnNames.size();
+    }
+
 }
