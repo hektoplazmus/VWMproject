@@ -38,7 +38,7 @@ public class Index {
     }
 
     public void loadData() {
-        dataSet = dl.load(chosenDataSet + ".csv");
+        dataSet = dl.loadWithValues(chosenDataSet + ".csv");
         setItems(dataSet.getItems());
         setColumnNames(dataSet.getColumnNames());
     }

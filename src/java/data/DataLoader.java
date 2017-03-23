@@ -64,4 +64,48 @@ public class DataLoader {
         System.out.println("succesfully loaded");
         return dataSet;
     }
+    
+    public DataSet loadWithValues(String fileName) {
+        DataSet dataSet = new DataSet();
+        
+        try {
+            System.out.println("loading dataset " + fileName);
+            
+            InputStream is = getClass().getClassLoader().getResourceAsStream("/" + fileName);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            //CSVReader reader = new CSVReader(br);
+            
+
+            String line = br.readLine();
+            String [] nextLine = line.split(",");
+            
+            for (int i = 0; i < nextLine.length; i++) {
+                dataSet.getColumnNames().add(nextLine[i]);
+            }
+                        
+            while ((line = br.readLine()) != null) {
+                nextLine = line.split(",");
+                Item newItem = new Item();
+                for (int i = 0; i < nextLine.length; i++) {
+                    int index = nextLine[i].lastIndexOf(":");
+                    if (index != -1){
+                        float value = Float.parseFloat(nextLine[i].substring(index+1));
+                        newItem.addValue(value);
+                        newItem.addAttr(nextLine[i].substring(0,index));
+                    } else{
+                        newItem.addValue(0f);
+                        newItem.addAttr(nextLine[i]);
+                    }
+                    
+                }
+                dataSet.getItems().add(newItem);
+
+            }  
+        } catch (IOException ex) {
+            System.out.println("not loaded");
+            Logger.getLogger(DataLoader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("succesfully loaded");
+        return dataSet;
+    }
 }

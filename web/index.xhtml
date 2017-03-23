@@ -16,7 +16,7 @@
             <div style="padding: 5px; float:left">
                 <p:selectOneMenu value="#{index.chosenDataSet}" style="width:125px; float: left">
                     <f:selectItem itemLabel="notebooks" itemValue="notebooks" />
-                    <f:selectItem itemLabel="data" itemValue="data" />
+                    <f:selectItem itemLabel="notebooks2" itemValue="notebooks2" />
                 </p:selectOneMenu>
 
                 <p:commandButton value="choose" id="nonAjax" actionListener="#{index.loadData()}" ajax="false"  style="margin-left: 10px; float: right"/>
@@ -26,13 +26,13 @@
         <p:dataTable value="#{index.items}" var="o"
                      styleClass="order-table" rows="10"
                      paginator="true" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                     rowsPerPageTemplate="5,10,15" 
+                     rowsPerPageTemplate="5,10,15"
                      style="float:left"
                      > 
             <p:ajax event="rowSelect" />
 
             <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
-                <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getAttr(i)}">
+                <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValues(i)}">
                     <h:outputText value="#{o.getAttr(i)}" />
 
                 </p:column>

@@ -14,10 +14,12 @@ import java.util.List;
  */
 public class Item {
     
-    List<String> attr;
+    private List<String> attr;
+    private List<Float> values;
     
     public Item(){
         attr = new ArrayList<String>();
+        values = new ArrayList<Float>();
         
     }
     
@@ -28,5 +30,21 @@ public class Item {
     public void addAttr(String attrib){
         attr.add(attrib);
     }
+
+    /**
+     * @return the values
+     */
+    public float getValues(int i) {
+        return values.get(i);
+    }
+
     
+    /**
+     * @param values the values to set
+     */
+    public void addValue(float value) {
+        this.values.add(value);
+    }
+    
+  
 }
