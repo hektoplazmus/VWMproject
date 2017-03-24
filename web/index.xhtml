@@ -10,18 +10,54 @@
         <title>VWM project</title>
     </h:head>
     <h:body>
-        <h2>VWM Project - Treshold top(k) algorithm</h2>
-        <h5 style="float:right">made by Daniel Němec and Jan Pancíř</h5>
-        <h:form>
-            <div style="padding: 5px; float:left">
-                <p:selectOneMenu value="#{index.chosenDataSet}" style="width:125px; float: left">
-                    <f:selectItem itemLabel="notebooks" itemValue="notebooks" />
-                    <f:selectItem itemLabel="notebooks2" itemValue="notebooks2" />
-                </p:selectOneMenu>
+        <p:panel id="basic" header="VWM Project - Treshold top(k) algorithm"  style="margin-bottom:20px">
+            <h:outputText value="made by Daniel Němec and Jan Pancíř 2017" />
 
-                <p:commandButton value="choose" id="nonAjax" actionListener="#{index.loadData()}" ajax="false"  style="margin-left: 10px; float: right"/>
-            </div>
+        </p:panel>
+
+
+
+        <h:form>
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:growl id="msg" showDetail="true" />
+                    <p:selectOneMenu value="#{index.chosenDataSet}" style="width:150px; float: left" 
+                                     valueChangeListener="#{index.loadData()}" onchange="submit()" >
+
+                        <f:selectItem itemLabel="notebooks" itemValue="notebooks" />
+                        <f:selectItem itemLabel="notebooks2" itemValue="notebooks2" />
+                        <p:ajax update="msg"  />
+                    </p:selectOneMenu>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+
+
+                    <h:outputText value="show normalization: " />
+
+                    <p:selectBooleanCheckbox style="margin-top: 5px;" value="#{index.showNormalization}" onchange="submit()">
+                        <p:ajax update="msg"  />
+                    </p:selectBooleanCheckbox>
+
+
+                </f:facet>
+                 <f:facet name="right">
+                    <h:outputText value="find top " />
+                    <p:spinner value="#{index.k}" min="1" max="100" size="3" />
+                    <h:outputText value="products" />
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+                    <p:commandButton value="search"/>
+
+
+                </f:facet>
+               
+            </p:toolbar> 
         </h:form>
+
 
         <p:dataTable value="#{index.items}" var="o"
                      styleClass="order-table" rows="10"
@@ -33,8 +69,11 @@
 
             <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
                 <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValues(i)}">
-                    <h:outputText value="#{o.getAttr(i)}" />
 
+                    <h:outputText value="#{o.getAttr(i)}" />
+                    <c:if test='#{index.showNormalization ==true}'>
+                        <h:outputText style="float: right" value=" ~#{o.getValues(i)}" />
+                    </c:if>
                 </p:column>
             </c:forEach>
 
@@ -44,6 +83,9 @@
 
         </p:dataTable>
 
+
+
     </h:body>
+
 </html>
 

@@ -27,14 +27,17 @@ public class Index {
 
     private DataLoader dl;
     private DataSet dataSet;
-    private String chosenDataSet;
+    private String chosenDataSet = "notebooks2";
     private List<Item> items;
     private List<String> columnNames;
+    private int k = 1;
+    private boolean showNormalization = false;
     
     public Index() {
         dl = new DataLoader();
         items = new ArrayList<Item>();
         columnNames = new ArrayList<String>();
+        loadData();
     }
 
     public void loadData() {
@@ -92,4 +95,34 @@ public class Index {
         return columnNames.size();
     }
 
+    /**
+     * @return the showNormalization
+     */
+    public boolean getShowNormalization() {
+        return showNormalization;
+    }
+
+    /**
+     * @param showNormalization the showNormalization to set
+     */
+    public void setShowNormalization(boolean showNormalization) {
+        this.showNormalization = showNormalization;
+    }
+
+    /**
+     * @return the k
+     */
+    public int getK() {
+        return k;
+    }
+
+    /**
+     * @param k the k to set
+     */
+    public void setK(int k) {
+        this.k = k;
+    }
+
+    
+    
 }

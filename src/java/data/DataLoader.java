@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Singleton;
@@ -67,6 +68,7 @@ public class DataLoader {
     
     public DataSet loadWithValues(String fileName) {
         DataSet dataSet = new DataSet();
+        boolean [] attribsToRecalculate = new boolean[0];
         
         try {
             System.out.println("loading dataset " + fileName);
@@ -82,7 +84,8 @@ public class DataLoader {
             for (int i = 0; i < nextLine.length; i++) {
                 dataSet.getColumnNames().add(nextLine[i]);
             }
-                        
+            attribsToRecalculate = new boolean[nextLine.length];
+            
             while ((line = br.readLine()) != null) {
                 nextLine = line.split(",");
                 Item newItem = new Item();
@@ -93,7 +96,8 @@ public class DataLoader {
                         newItem.addValue(value);
                         newItem.addAttr(nextLine[i].substring(0,index));
                     } else{
-                        newItem.addValue(0f);
+                        attribsToRecalculate[i] = true;
+                        newItem.addValue(Float.parseFloat(nextLine[i]));
                         newItem.addAttr(nextLine[i]);
                     }
                     
@@ -105,6 +109,32 @@ public class DataLoader {
             System.out.println("not loaded");
             Logger.getLogger(DataLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        for (int i = 0; i < attribsToRecalculate.length; i++) {
+            if (attribsToRecalculate[i]) {
+                
+                //GETTING MAX VALUE
+                float maxValue = 0;
+                float minValue = Float.MAX_VALUE;
+                for (int j = 0; j < dataSet.getItems().size(); j++){
+                    float tmp = dataSet.getItems().get(j).getValues(i);
+                    if (tmp > maxValue)
+                        maxValue = tmp;
+                    if (tmp < minValue)
+                        minValue = tmp;
+                }
+                
+                //NORMALIZING TO INTERVAL 0..1
+                for (int j = 0; j < dataSet.getItems().size(); j++){
+                    float tmp = dataSet.getItems().get(j).getValues(i);
+                    float normalizedValue = 1-(tmp - minValue) / (maxValue - minValue);
+                    dataSet.getItems().get(j).setValue(i, (float)(Math.round(normalizedValue * 100d) / 100d));
+                    
+                }
+                
+            }
+        }
+        
         System.out.println("succesfully loaded");
         return dataSet;
     }

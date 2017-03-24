@@ -46,5 +46,7 @@ public class Item {
         this.values.add(value);
     }
     
-  
+    public void setValue(int index, float val){
+        this.values.set(index, val);
+    }
 }
