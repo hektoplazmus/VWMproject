@@ -27,13 +27,15 @@ public class Index {
 
     private DataLoader dl;
     private DataSet dataSet;
-    private String chosenDataSet = "notebooks2";
+    private String chosenDataSet;
     private List<Item> items;
     private List<String> columnNames;
     private int k = 1;
     private boolean showNormalization = false;
     
     public Index() {
+        chosenDataSet = "notebooks-small";
+        
         dl = new DataLoader();
         items = new ArrayList<Item>();
         columnNames = new ArrayList<String>();
