@@ -25,28 +25,51 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class Index {
 
+    //helper class for loading data
     private DataLoader dl;
+    
+    //loaded dataset
     private DataSet dataSet;
 
+    //dataset to be loaded
     private String chosenDataSet;
 
+    //copy of item list for datatable view
     private List<Item> items;
+    
+    //items in result datatable
+    private List<Item> searchedItems;
+    
+    //names of table columns
     private List<String> columnNames;
 
+    //agreagate function used in search
     private String agregateFunc;
+    
+    //number of products to find
     private int k = 1;
+    
+    //true id arrtib is used in agregate function
     private boolean[] choosenAttribs;
+    
+    //names of selected attribs
     private String[] selectedAttribs;
 
+    //true if normalization is shown
     private boolean showNormalization = false;
 
+    
     public Index() {
+        //init values
         chosenDataSet = "notebooks-small";
         agregateFunc = "max";
 
-        dl = new DataLoader();
+       
+        
         items = new ArrayList<Item>();
         columnNames = new ArrayList<String>();
+         //loades default dataset
+         dl = new DataLoader();
         loadData();
     }
 
@@ -54,15 +77,31 @@ public class Index {
         dataSet = dl.loadWithValues(chosenDataSet + ".csv");
         setItems(dataSet.getItems());
         setColumnNames(dataSet.getColumnNames());
+       
         choosenAttribs = new boolean[dataSet.getColumnNames().size()];
     }
 
     public void search() {
         Bruteforce bf = new Bruteforce();
-        boolean[] tmp = {true, true, false, false, false, false};
-        List<Integer> res = bf.compute(items, tmp, k);
+          
+        boolean[] tmp = new boolean[dataSet.getColumnNames().size()];
+        for (String chosenAttrib : selectedAttribs) {
+            for (int i = 0; i < columnNames.size(); i++) {
+                if (chosenAttrib.equals(columnNames.get(i))){
+                    tmp[i] = true;
+                    break;
+                }                    
+            }                   
+        }
+        
+        
+        List<Integer> res = bf.compute(dataSet.getItems(), tmp, k);
         System.out.println("CHOSEN ATTRIBS: ");
 
+        searchedItems = new ArrayList<Item>();
+        for (int itemIndex : res) {
+            searchedItems.add(dataSet.getItems().get(itemIndex));
+        }
         for (int s : res) {
             System.out.println("id = " + s + " : " + items.get(s).getAttr(0));
 
@@ -172,4 +211,20 @@ public class Index {
         this.selectedAttribs = selectedAttribs;
     }
 
+    /**
+     * @return the searchedItems
+     */
+    public List<Item> getSearchedItems() {
+        return searchedItems;
+    }
+
+    /**
+     * @param searchedItems the searchedItems to set
+     */
+    public void setSearchedItems(List<Item> searchedItems) {
+        this.searchedItems = searchedItems;
+    }
+
+    
+    
 }

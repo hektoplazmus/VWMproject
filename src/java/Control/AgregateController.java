@@ -7,12 +7,14 @@ package Control;
 
 import java.util.List;
 
-/**
- *
+ /*
+ * implements all agregate functions
  * @author pancijan
  */
 public class AgregateController {
     
+    
+   
     public float agFuncSum(List<Float> values) {
         float sum = 0;
         for (float x : values)

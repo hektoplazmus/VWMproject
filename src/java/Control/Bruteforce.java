@@ -33,7 +33,7 @@ public class Bruteforce {
             List<Float> values = new ArrayList<Float>();
             for (int j = 0; j < items.get(i).valuesCount(); j++) {
                 if (columns[j]) {
-                    values.add(items.get(i).getValues(j));
+                    values.add(items.get(i).getValue(j));
                 }
             }
             float resultValue = ac.agFuncSum(values);
@@ -43,11 +43,14 @@ public class Bruteforce {
         Collections.sort(tmp, new Comparator<Pair<Integer,Float>>() {
             @Override
             public int compare(Pair<Integer,Float> x, Pair<Integer,Float> y) {
-
-                return (int) (x.getValue() - y.getValue());
+               if (x.getValue() - y.getValue() < 0) return 1;
+               else if (x.getValue() - y.getValue() > 0) return -1;
+               return 0;
             }
         });
-        
+        for (Pair<Integer,Float> f : tmp){
+            System.out.println(f.getKey() + " " + f.getValue());
+        }
         for (int i = 0; i < k; i++)
             result.add(tmp.get(i).getKey());
         

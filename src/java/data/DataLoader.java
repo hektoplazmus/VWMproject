@@ -34,6 +34,9 @@ public class DataLoader {
     public  DataLoader() {
     }
     
+    /*
+    * unused
+    */
     public DataSet load(String fileName) {
         DataSet dataSet = new DataSet();
         
@@ -65,6 +68,12 @@ public class DataLoader {
         System.out.println("succesfully loaded");
         return dataSet;
     }
+    
+    
+    /*
+    * load csv file with attribs separated by comma
+    * if : is not found, normalize the attrib
+    */
     
     public DataSet loadWithValues(String fileName) {
         DataSet dataSet = new DataSet();
@@ -117,7 +126,7 @@ public class DataLoader {
                 float maxValue = 0;
                 float minValue = Float.MAX_VALUE;
                 for (int j = 0; j < dataSet.getItems().size(); j++){
-                    float tmp = dataSet.getItems().get(j).getValues(i);
+                    float tmp = dataSet.getItems().get(j).getValue(i);
                     if (tmp > maxValue)
                         maxValue = tmp;
                     if (tmp < minValue)
@@ -126,7 +135,7 @@ public class DataLoader {
                 
                 //NORMALIZING TO INTERVAL 0..1
                 for (int j = 0; j < dataSet.getItems().size(); j++){
-                    float tmp = dataSet.getItems().get(j).getValues(i);
+                    float tmp = dataSet.getItems().get(j).getValue(i);
                     float normalizedValue = 1-(tmp - minValue) / (maxValue - minValue);
                     dataSet.getItems().get(j).setValue(i, (float)(Math.round(normalizedValue * 100d) / 100d));
                     

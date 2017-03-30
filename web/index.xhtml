@@ -1,11 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
     <h:head>
         <title>VWM project</title>
     </h:head>
@@ -16,6 +18,7 @@
         </p:panel>
 
 
+<p:fieldset legend="Search settings" toggleable="true" toggleSpeed="500">
 
         <h:form>
             <p:growl id="msg" showDetail="true" />
@@ -90,11 +93,11 @@
                 <p:ajax event="rowSelect" />
 
                 <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
-                    <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValues(i)}">
+                    <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValue(i)}">
 
                         <h:outputText value="#{o.getAttr(i)}" />
                         <c:if test='#{index.showNormalization ==true}'>
-                            <h:outputText style="float: right" value=" ~#{o.getValues(i)}" />
+                            <h:outputText style="float: right" value=" ~#{o.getValue(i)}" />
                         </c:if>
                     </p:column>
                 </c:forEach>
@@ -106,7 +109,26 @@
             </p:dataTable>
 
         </h:form>
+        </p:fieldset>
+        <p:fieldset legend="Bruteforce result" toggleable="true" toggleSpeed="500" style="margin-top: 10px">
 
+        
+        <p:dataTable value="#{index.searchedItems}" var="o"
+                         styleClass="order-table" rows="10"
+                         paginator="true" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         rowsPerPageTemplate="5,10,15"
+                         style="float:left"
+                         > 
+                <p:ajax event="rowSelect" />
+
+                <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
+                    <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValues(i)}">
+                        <h:outputText value="#{o.getAttr(i)}" />
+                    </p:column>
+                </c:forEach>
+
+            </p:dataTable>
+        </p:fieldset>
     </h:body>
 
 </html>

@@ -14,7 +14,10 @@ import java.util.List;
  */
 public class Item {
     
+    //list of atributes for items
     private List<String> attr;
+    
+    //list of normalize values for item
     private List<Float> values;
     
     public Item(){
@@ -32,9 +35,9 @@ public class Item {
     }
 
     /**
-     * @return the values
+     * @return the value
      */
-    public float getValues(int i) {
+    public float getValue(int i) {
         return values.get(i);
     }
 
