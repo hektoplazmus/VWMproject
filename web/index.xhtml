@@ -50,13 +50,30 @@
 
                 </f:facet>
                 <f:facet name="right">
+                    
+                    <p:selectCheckboxMenu id="multiple" value="#{index.selectedAttribs}" label="attributes" 
+                                   panelStyle="width:250px">
+                        <f:selectItems value="#{index.columnNames}" />
+                    </p:selectCheckboxMenu>
+
+
+                    <p:selectOneMenu value="#{index.agregateFunc}"  style="width:200px; margin-left: 20px; " 
+                                     immediate="true"  >
+                        <p:ajax  update="msg"/>
+
+                        <f:selectItem itemLabel="min" itemValue="min" />
+                        <f:selectItem itemLabel="max" itemValue="max" />
+                        <f:selectItem itemLabel="sum" itemValue="sum" />
+
+                    </p:selectOneMenu>
+
                     <h:outputText value="find top " />
                     <p:spinner value="#{index.k}" min="1" max="100" size="3" />
                     <h:outputText value="products" />
                     <span class="ui-separator">
                         <span class="ui-icon ui-icon-grip-dotted-vertical" />
                     </span>
-                    <p:commandButton value="search"/>
+                        <p:commandButton value="search" update="msg" actionListener="#{index.search()}" ajax="false" styleClass="ui-priority-primary" />
 
 
                 </f:facet>
@@ -87,7 +104,6 @@
 
 
             </p:dataTable>
-
 
         </h:form>
 

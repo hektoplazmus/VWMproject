@@ -49,4 +49,7 @@ public class Item {
     public void setValue(int index, float val){
         this.values.set(index, val);
     }
+    public int valuesCount(){
+        return values.size();
+    }
 }
