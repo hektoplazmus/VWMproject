@@ -1,6 +1,5 @@
 package data;
 
-import com.opencsv.CSVReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +36,7 @@ public class DataLoader {
     /*
     * unused
     */
-    public DataSet load(String fileName) {
+    /*public DataSet load(String fileName) {
         DataSet dataSet = new DataSet();
         
         try {
@@ -67,7 +66,7 @@ public class DataLoader {
         }
         System.out.println("succesfully loaded");
         return dataSet;
-    }
+    }*/
     
     
     /*
