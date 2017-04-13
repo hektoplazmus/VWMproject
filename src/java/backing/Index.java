@@ -15,7 +15,8 @@ import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-
+import static Control.Constants.*;
+import Control.Treshold;
 /* test */
 /**
  *
@@ -24,6 +25,34 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean
 @SessionScoped
 public class Index {
+
+    /**
+     * @return the timeBruteforce
+     */
+    public long getTimeBruteforce() {
+        return timeBruteforce;
+    }
+
+    /**
+     * @param timeBruteforce the timeBruteforce to set
+     */
+    public void setTimeBruteforce(long timeBruteforce) {
+        this.timeBruteforce = timeBruteforce;
+    }
+
+    /**
+     * @return the timeTreshold
+     */
+    public long getTimeTreshold() {
+        return timeTreshold;
+    }
+
+    /**
+     * @param timeTreshold the timeTreshold to set
+     */
+    public void setTimeTreshold(long timeTreshold) {
+        this.timeTreshold = timeTreshold;
+    }
 
     //helper class for loading data
     private DataLoader dl;
@@ -38,7 +67,10 @@ public class Index {
     private List<Item> items;
     
     //items in result datatable
-    private List<Item> searchedItems;
+    private List<Item> searchedItemsBruteforce;
+    
+    //items in result datatable
+    private List<Item> searchedItemsTreshold;
     
     //names of table columns
     private List<String> columnNames;
@@ -57,11 +89,14 @@ public class Index {
 
     //true if normalization is shown
     private boolean showNormalization = false;
-
+    
+    private long timeBruteforce = 0;
+    
+    private long timeTreshold = 0;
     
     public Index() {
         //init values
-        chosenDataSet = "notebooks-small";
+        chosenDataSet = "notebooks-huge";
         agregateFunc = "max";
 
        
@@ -83,7 +118,18 @@ public class Index {
 
     public void search() {
         Bruteforce bf = new Bruteforce();
-          
+        Treshold tr = new Treshold();
+        
+        int agregateFuncCode;
+        if (agregateFunc.equals("sum")){
+            agregateFuncCode = AG_FUNC_SUM;
+        } else if (agregateFunc.equals("min")) {
+            agregateFuncCode = AG_FUNC_MIN;
+        } else if (agregateFunc.equals("max")){
+            agregateFuncCode = AG_FUNC_MAX;
+        } else return;
+        
+        //set TRUE if the column is chosen for searching
         boolean[] tmp = new boolean[dataSet.getColumnNames().size()];
         for (String chosenAttrib : selectedAttribs) {
             for (int i = 0; i < columnNames.size(); i++) {
@@ -93,19 +139,28 @@ public class Index {
                 }                    
             }                   
         }
+        System.out.println("AGRE " + agregateFuncCode);
+        //computes indexes of searched items
         
-        
-        List<Integer> res = bf.compute(dataSet.getItems(), tmp, k);
-        System.out.println("CHOSEN ATTRIBS: ");
+        long startTime = System.currentTimeMillis();
+        List<Integer> res = bf.compute(dataSet.getItems(), tmp, k, agregateFuncCode);
+        setTimeBruteforce(System.currentTimeMillis() - startTime);
 
-        searchedItems = new ArrayList<Item>();
+        startTime = System.currentTimeMillis();
+        List<Integer> resTr = tr.compute(dataSet.getItems(), tmp, k, agregateFuncCode);
+        setTimeTreshold(System.currentTimeMillis() - startTime);
+        
+        //finds items in dataset
+        searchedItemsBruteforce = new ArrayList<Item>();
         for (int itemIndex : res) {
-            searchedItems.add(dataSet.getItems().get(itemIndex));
+            searchedItemsBruteforce.add(dataSet.getItems().get(itemIndex));
         }
-        for (int s : res) {
-            System.out.println("id = " + s + " : " + items.get(s).getAttr(0));
+        
+        searchedItemsTreshold = new ArrayList<Item>();
+        for (int itemIndex : resTr) {
+            searchedItemsTreshold.add(dataSet.getItems().get(itemIndex));
+        }
 
-        }
     }
 
     /**
@@ -214,15 +269,29 @@ public class Index {
     /**
      * @return the searchedItems
      */
-    public List<Item> getSearchedItems() {
-        return searchedItems;
+    public List<Item> getSearchedItemsBruteforce() {
+        return searchedItemsBruteforce;
     }
 
     /**
      * @param searchedItems the searchedItems to set
      */
-    public void setSearchedItems(List<Item> searchedItems) {
-        this.searchedItems = searchedItems;
+    public void setSearchedItemsBruteforce(List<Item> searchedItems) {
+        this.searchedItemsBruteforce = searchedItems;
+    }
+
+    /**
+     * @return the searchedItemsTreshold
+     */
+    public List<Item> getSearchedItemsTreshold() {
+        return searchedItemsTreshold;
+    }
+
+    /**
+     * @param searchedItemsTreshold the searchedItemsTreshold to set
+     */
+    public void setSearchedItemsTreshold(List<Item> searchedItemsTreshold) {
+        this.searchedItemsTreshold = searchedItemsTreshold;
     }
 
     

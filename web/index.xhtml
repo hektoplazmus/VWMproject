@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    
+
     <h:head>
         <title>VWM project</title>
     </h:head>
@@ -18,117 +18,141 @@
         </p:panel>
 
 
-<p:fieldset legend="Search settings" toggleable="true" toggleSpeed="500">
+        <p:fieldset legend="Search settings" toggleable="true" toggleSpeed="500">
 
-        <h:form>
-            <p:growl id="msg" showDetail="true" />
+            <h:form>
+                <p:growl id="msg" showDetail="true" />
 
-            <p:toolbar>
+                <p:toolbar>
 
-                <f:facet name="left">
+                    <f:facet name="left">
 
-                    <p:selectOneMenu value="#{index.chosenDataSet}" style="width:200px; float: left" 
-                                     immediate="true"  >
-                        <p:ajax  update="msg"/>
-
-                        <f:selectItem itemLabel="notebooks-small" itemValue="notebooks-small" />
-                        <f:selectItem itemLabel="notebooks-large" itemValue="notebooks-large" />
-                        <f:selectItem itemLabel="notebooks-middle" itemValue="notebooks-middle" />
-
-                    </p:selectOneMenu>
-                    <p:commandButton value="choose" update="msg" actionListener="#{index.loadData()}" ajax="false" styleClass="ui-priority-primary" />
-
-                    <span class="ui-separator">
-                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
-                    </span>
+                        <p:selectOneMenu value="#{index.chosenDataSet}" style="width:200px; float: left" 
+                                         immediate="true"  >
+                            <p:ajax  update="msg"/>
+                            <f:selectItem itemLabel="notebooks-huge" itemValue="notebooks-huge" />
+                            <f:selectItem itemLabel="notebooks-small" itemValue="notebooks-small" />
+                            <f:selectItem itemLabel="notebooks-large" itemValue="notebooks-large" />
+                            <f:selectItem itemLabel="notebooks-middle" itemValue="notebooks-middle" />
 
 
+                        </p:selectOneMenu>
+                        <p:commandButton value="choose" update="msg" actionListener="#{index.loadData()}" ajax="false" styleClass="ui-priority-primary" />
 
-                    <h:outputText value="show normalization: " />
-
-                    <p:selectBooleanCheckbox style="margin-top: 5px;" value="#{index.showNormalization}" onchange="submit()" >
-                        <p:ajax update="msg"  />
-                    </p:selectBooleanCheckbox>
-
-
-                </f:facet>
-                <f:facet name="right">
-                    
-                    <p:selectCheckboxMenu id="multiple" value="#{index.selectedAttribs}" label="attributes" 
-                                   panelStyle="width:250px">
-                        <f:selectItems value="#{index.columnNames}" />
-                    </p:selectCheckboxMenu>
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span>
 
 
-                    <p:selectOneMenu value="#{index.agregateFunc}"  style="width:200px; margin-left: 20px; " 
-                                     immediate="true"  >
-                        <p:ajax  update="msg"/>
 
-                        <f:selectItem itemLabel="min" itemValue="min" />
-                        <f:selectItem itemLabel="max" itemValue="max" />
-                        <f:selectItem itemLabel="sum" itemValue="sum" />
+                        <h:outputText value="show normalization: " />
 
-                    </p:selectOneMenu>
+                        <p:selectBooleanCheckbox style="margin-top: 5px;" value="#{index.showNormalization}" onchange="submit()" >
+                            <p:ajax update="msg"  />
+                        </p:selectBooleanCheckbox>
 
-                    <h:outputText value="find top " />
-                    <p:spinner value="#{index.k}" min="1" max="100" size="3" />
-                    <h:outputText value="products" />
-                    <span class="ui-separator">
-                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
-                    </span>
+
+                    </f:facet>
+                    <f:facet name="right">
+
+                        <p:selectCheckboxMenu id="multiple" value="#{index.selectedAttribs}" label="attributes" 
+                                              panelStyle="width:250px">
+                            <f:selectItems value="#{index.columnNames}" />
+                        </p:selectCheckboxMenu>
+
+
+                        <p:selectOneMenu value="#{index.agregateFunc}"  style="width:200px; margin-left: 20px; " 
+                                         immediate="true"  >
+                            <p:ajax  update="msg"/>
+
+                            <f:selectItem itemLabel="min" itemValue="min" />
+                            <f:selectItem itemLabel="max" itemValue="max" />
+                            <f:selectItem itemLabel="sum" itemValue="sum" />
+
+                        </p:selectOneMenu>
+
+                        <h:outputText value="find top " />
+                        <p:spinner value="#{index.k}" min="1" max="100" size="3" />
+                        <h:outputText value="products" />
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span>
                         <p:commandButton value="search" update="msg" actionListener="#{index.search()}" ajax="false" styleClass="ui-priority-primary" />
 
 
-                </f:facet>
+                    </f:facet>
 
-            </p:toolbar> 
-
-
-            <p:dataTable value="#{index.items}" var="o"
-                         styleClass="order-table" rows="10"
-                         paginator="true" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                         rowsPerPageTemplate="5,10,15"
-                         style="float:left"
-                         > 
-                <p:ajax event="rowSelect" />
-
-                <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
-                    <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValue(i)}">
-
-                        <h:outputText value="#{o.getAttr(i)}" />
-                        <c:if test='#{index.showNormalization ==true}'>
-                            <h:outputText style="float: right" value=" ~#{o.getValue(i)}" />
-                        </c:if>
-                    </p:column>
-                </c:forEach>
+                </p:toolbar> 
 
 
+                <p:dataTable value="#{index.items}" var="o"
+                             styleClass="order-table" rows="10"
+                             paginator="true" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15"
+                             style="float:left"
+                             > 
+                    <p:ajax event="rowSelect" />
 
+                    <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
+                        <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValue(i)}">
 
+                            <h:outputText value="#{o.getAttr(i)}" />
+                            <c:if test='#{index.showNormalization ==true}'>
+                                <h:outputText style="float: right" value=" ~#{o.getValue(i)}" />
+                            </c:if>
+                        </p:column>
+                    </c:forEach>
 
-            </p:dataTable>
+                </p:dataTable>
 
-        </h:form>
+            </h:form>
+            
         </p:fieldset>
+        
         <p:fieldset legend="Bruteforce result" toggleable="true" toggleSpeed="500" style="margin-top: 10px">
 
-        
-        <p:dataTable value="#{index.searchedItems}" var="o"
-                         styleClass="order-table" rows="10"
-                         paginator="true" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                         rowsPerPageTemplate="5,10,15"
+
+            <p:dataTable value="#{index.searchedItemsBruteforce}" var="o"
+                         styleClass="order-table"
                          style="float:left"
                          > 
                 <p:ajax event="rowSelect" />
 
                 <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
-                    <p:column headerText="#{index.columnNames.get(i)}" sortBy="#{o.getValues(i)}">
+                    <p:column headerText="#{index.columnNames.get(i)}" >
                         <h:outputText value="#{o.getAttr(i)}" />
                     </p:column>
                 </c:forEach>
 
             </p:dataTable>
         </p:fieldset>
+        
+        <p:fieldset legend="Treshold result" toggleable="true" toggleSpeed="500" style="margin-top: 10px">
+
+
+            <p:dataTable value="#{index.searchedItemsTreshold}" var="o"
+                         styleClass="order-table"
+                         style="float:left"
+                         > 
+                <p:ajax event="rowSelect" />
+
+                <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
+                    <p:column headerText="#{index.columnNames.get(i)}" >
+                        <h:outputText value="#{o.getAttr(i)}" />
+                    </p:column>
+                </c:forEach>
+
+            </p:dataTable>
+        </p:fieldset>
+
+        <p:panel  header="Time " style="margin-bottom:20px">
+            <h:outputText value="bruteforce time: #{index.timeBruteforce}" />
+            <br></br> 
+            <h:outputText value="Treshold time: #{index.timeTreshold}" />
+        </p:panel>
+        
+
+        
     </h:body>
 
 </html>

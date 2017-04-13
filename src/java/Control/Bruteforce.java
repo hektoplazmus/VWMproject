@@ -24,7 +24,7 @@ public class Bruteforce {
         ac = new AgregateController();
     }
 
-    public List<Integer> compute(List<Item> items, boolean[] columns, int k) {
+    public List<Integer> compute(List<Item> items, boolean[] columns, int k, int agregateFunc) {
         List<Integer> result = new ArrayList<Integer>();
 
         List<Pair<Integer, Float>> tmp = new ArrayList<Pair<Integer, Float>>();
@@ -36,7 +36,7 @@ public class Bruteforce {
                     values.add(items.get(i).getValue(j));
                 }
             }
-            float resultValue = ac.agFuncSum(values);
+            float resultValue = ac.agFunc(agregateFunc,values);
             tmp.add(new Pair<Integer, Float>(i, resultValue));
         }
 
@@ -48,9 +48,13 @@ public class Bruteforce {
                return 0;
             }
         });
+        
+        /*
         for (Pair<Integer,Float> f : tmp){
             System.out.println(f.getKey() + " " + f.getValue());
         }
+        */
+        
         for (int i = 0; i < k; i++)
             result.add(tmp.get(i).getKey());
         
