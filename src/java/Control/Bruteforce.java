@@ -29,6 +29,7 @@ public class Bruteforce {
 
         List<Pair<Integer, Float>> tmp = new ArrayList<Pair<Integer, Float>>();
 
+        
         for (int i = 0; i < items.size(); i++) {
             List<Float> values = new ArrayList<Float>();
             for (int j = 0; j < items.get(i).valuesCount(); j++) {

@@ -20,32 +20,23 @@ import javafx.util.Pair;
  * @author pancijan
  */
 public class Treshold {
-
+     
     private AgregateController ac;
+    public  List<List<Pair<Integer, Float>>> sortedColumns;
     public Treshold() {
         ac = new AgregateController();
     }
 
-    public List<Integer> compute(List<Item> items, boolean[] columns, int k, int agregateFunc) {
-        
-      
-        List<Integer> result = new ArrayList<Integer>();
+    public void initData(List<Item> items){
+        if (items.size() <= 0 ) return;
 
-        List<List<Pair<Integer, Float>>> treshList = new ArrayList<List<Pair<Integer, Float>>>();
-
-        List<Integer> colIndexes = new ArrayList<Integer>();
-        for (int i = 0; i < columns.length; i++) {
-            if (columns[i]) {
-                colIndexes.add(i);
-            }
-        }
-        //System.out.println("COLS: " + colIndexes.toString() );
-        for (int colIndex : colIndexes) {
+        sortedColumns = new ArrayList<List<Pair<Integer, Float>>>();
+        for (int i = 0; i < items.get(0).valuesCount(); i++) {
 
             List<Pair<Integer, Float>> tmp = new ArrayList<Pair<Integer, Float>>();
 
             for (int j = 0; j < items.size(); j++) {
-                tmp.add(new Pair<Integer, Float>(j, items.get(j).getValue(colIndex)));
+                tmp.add(new Pair<Integer, Float>(j, items.get(j).getValue(i)));
             }
             Collections.sort(tmp, new Comparator<Pair<Integer, Float>>() {
                 @Override
@@ -58,11 +49,23 @@ public class Treshold {
                     return 0;
                 }
             });
-            treshList.add(tmp);
+            sortedColumns.add(tmp);
         }
+    }
+    public List<Integer> compute(List<Item> items, boolean[] columns, int k, int agregateFunc) {
+        
+        
+        List<Integer> result = new ArrayList<Integer>();
+
+        List<Integer> colIndexes = new ArrayList<Integer>();
+        for (int i = 0; i < columns.length; i++) {
+            if (columns[i]) {
+                colIndexes.add(i);
+            }
+        }
+        //System.out.println("COLS: " + colIndexes.toString() );
 
         List<Pair<Integer, List<Float>>> resultList = new ArrayList<Pair<Integer, List<Float>>>();
-
 
         PriorityQueue<Pair<Integer, Float>> resQueue = new PriorityQueue<Pair<Integer, Float>>((o1, o2) -> {
             if (o1.getValue() > o2.getValue()) {
@@ -86,24 +89,24 @@ public class Treshold {
                 break;
             
             List<Float> optimumValues = new ArrayList<Float>();
-            for (int i = 0; i < colIndexes.size(); i++) {
-                optimumValues.add(treshList.get(i).get(depth).getValue());
+            for (int colIndex : colIndexes) {
+                optimumValues.add(sortedColumns.get(colIndex).get(depth).getValue());
             }
             treshold = ac.agFunc(agregateFunc, optimumValues);
             //System.out.println("treshold = " + treshold);
             
-            for (int i = 0; i < colIndexes.size(); i++) {
+            for (int colIndex2 : colIndexes) {
                 
                 List<Float> values = new ArrayList<Float>();
 
-                int itemIndex = treshList.get(i).get(depth).getKey();
+                int itemIndex = sortedColumns.get(colIndex2).get(depth).getKey();
 
                 if (processedItems.contains(itemIndex)) {
                     continue;
                 }
 
-                for (int colIndex : colIndexes) {
-                    values.add(items.get(itemIndex).getValue(colIndex));
+                for (int colIndex3 : colIndexes) {
+                    values.add(items.get(itemIndex).getValue(colIndex3));
 
                 }
 

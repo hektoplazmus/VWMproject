@@ -145,11 +145,21 @@
             </p:dataTable>
         </p:fieldset>
 
+        <h:form>
+            
+            <p:commandButton value="search" update="msg" actionListener="#{index.processTimeTest()}" ajax="false" styleClass="ui-priority-primary" />
+
+        </h:form>
         <p:panel  header="Time " style="margin-bottom:20px">
             <h:outputText value="bruteforce time: #{index.timeBruteforce}" />
             <br></br> 
             <h:outputText value="Treshold time: #{index.timeTreshold}" />
+            
+            <p:chart type="line" model="#{chartView.lineModel1}" style="height:300px;"/>
+ 
         </p:panel>
+        
+        
         
 
         

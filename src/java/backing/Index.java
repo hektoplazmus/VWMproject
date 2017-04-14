@@ -17,6 +17,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import static Control.Constants.*;
 import Control.Treshold;
+import data.TimeChartData;
+import javafx.util.Pair;
 /* test */
 /**
  *
@@ -94,6 +96,9 @@ public class Index {
     
     private long timeTreshold = 0;
     
+    private Bruteforce bf = new Bruteforce();
+    private Treshold tr = new Treshold();
+        
     public Index() {
         //init values
         chosenDataSet = "notebooks-huge";
@@ -107,18 +112,52 @@ public class Index {
          dl = new DataLoader();
         loadData();
     }
+    public void processTimeTest(){
+        List<Pair<Integer,Integer> > times = new ArrayList<>();
+        int agregateFuncCode;
+        if (agregateFunc.equals("sum")){
+            agregateFuncCode = AG_FUNC_SUM;
+        } else if (agregateFunc.equals("min")) {
+            agregateFuncCode = AG_FUNC_MIN;
+        } else if (agregateFunc.equals("max")){
+            agregateFuncCode = AG_FUNC_MAX;
+        } else return;
+        
+        //set TRUE if the column is chosen for searching
+        boolean[] tmp = new boolean[dataSet.getColumnNames().size()];
+        for (String chosenAttrib : selectedAttribs) {
+            for (int i = 0; i < columnNames.size(); i++) {
+                if (chosenAttrib.equals(columnNames.get(i))){
+                    tmp[i] = true;
+                    break;
+                }                    
+            }                   
+        }
+        
+        for (int i = 1; i < 100; i++) {
+            long startTime = System.currentTimeMillis();
+            bf.compute(dataSet.getItems(), tmp, i, agregateFuncCode);
+            int bruteforceTime = (int) (System.currentTimeMillis() - startTime);
 
+            startTime = System.currentTimeMillis();
+            tr.compute(dataSet.getItems(), tmp, i, agregateFuncCode);
+            int tresholdTime = (int) (System.currentTimeMillis() - startTime);
+            times.add(new Pair<Integer,Integer>(bruteforceTime,tresholdTime));
+        }
+        TimeChartData.timeLines = times;
+        
+    }
     public void loadData() {
         dataSet = dl.loadWithValues(chosenDataSet + ".csv");
         setItems(dataSet.getItems());
         setColumnNames(dataSet.getColumnNames());
        
         choosenAttribs = new boolean[dataSet.getColumnNames().size()];
+        tr.initData(items);
+        
     }
 
     public void search() {
-        Bruteforce bf = new Bruteforce();
-        Treshold tr = new Treshold();
         
         int agregateFuncCode;
         if (agregateFunc.equals("sum")){
@@ -151,12 +190,12 @@ public class Index {
         setTimeTreshold(System.currentTimeMillis() - startTime);
         
         //finds items in dataset
-        searchedItemsBruteforce = new ArrayList<Item>();
+        searchedItemsBruteforce = new ArrayList<>();
         for (int itemIndex : res) {
             searchedItemsBruteforce.add(dataSet.getItems().get(itemIndex));
         }
         
-        searchedItemsTreshold = new ArrayList<Item>();
+        searchedItemsTreshold = new ArrayList<>();
         for (int itemIndex : resTr) {
             searchedItemsTreshold.add(dataSet.getItems().get(itemIndex));
         }
