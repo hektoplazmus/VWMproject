@@ -13,6 +13,11 @@ import javafx.util.Pair;
  * @author pancijan
  */
 public class TimeChartData {
-    public static List<Pair<Integer,Integer> > timeLines;  
+    public static List<Pair<Integer,Integer> > bruteforceTimeLineK;
+    public static List<Pair<Integer,Integer> > tresholdTimeLineK;
+    
+    public static List<Pair<Integer,Integer> > bruteforceTimeLineColumns;
+    public static List<Pair<Integer,Integer> > tresholdTimeLineColumns;
+
 
 }

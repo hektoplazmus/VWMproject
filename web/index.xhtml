@@ -34,7 +34,8 @@
                             <f:selectItem itemLabel="notebooks-small" itemValue="notebooks-small" />
                             <f:selectItem itemLabel="notebooks-large" itemValue="notebooks-large" />
                             <f:selectItem itemLabel="notebooks-middle" itemValue="notebooks-middle" />
-
+                            <f:selectItem itemLabel="notebooks-200000" itemValue="notebooks-200000" />
+                            <f:selectItem itemLabel="notebooks-500000" itemValue="notebooks-500000" />
 
                         </p:selectOneMenu>
                         <p:commandButton value="choose" update="msg" actionListener="#{index.loadData()}" ajax="false" styleClass="ui-priority-primary" />
@@ -72,7 +73,7 @@
                         </p:selectOneMenu>
 
                         <h:outputText value="find top " />
-                        <p:spinner value="#{index.k}" min="1" max="100" size="3" />
+                        <p:spinner value="#{index.k}" min="1" max="#{index.items.size()-1}" size="3" />
                         <h:outputText value="products" />
                         <span class="ui-separator">
                             <span class="ui-icon ui-icon-grip-dotted-vertical" />
@@ -109,7 +110,7 @@
             
         </p:fieldset>
         
-        <p:fieldset legend="Bruteforce result" toggleable="true" toggleSpeed="500" style="margin-top: 10px">
+        <p:fieldset legend="Bruteforce result" toggleable="true" collapsed="true" toggleSpeed="500" style="margin-top: 10px">
 
 
             <p:dataTable value="#{index.searchedItemsBruteforce}" var="o"
@@ -127,7 +128,7 @@
             </p:dataTable>
         </p:fieldset>
         
-        <p:fieldset legend="Treshold result" toggleable="true" toggleSpeed="500" style="margin-top: 10px">
+        <p:fieldset legend="Treshold result" toggleable="true" collapsed="true" toggleSpeed="500" style="margin-top: 10px">
 
 
             <p:dataTable value="#{index.searchedItemsTreshold}" var="o"
@@ -145,17 +146,18 @@
             </p:dataTable>
         </p:fieldset>
 
-        <h:form>
-            
-            <p:commandButton value="search" update="msg" actionListener="#{index.processTimeTest()}" ajax="false" styleClass="ui-priority-primary" />
-
-        </h:form>
-        <p:panel  header="Time " style="margin-bottom:20px">
+       
+        <p:panel  header="Time " style="margin-top:20px">
             <h:outputText value="bruteforce time: #{index.timeBruteforce}" />
             <br></br> 
             <h:outputText value="Treshold time: #{index.timeTreshold}" />
+             <h:form>
             
+            <p:commandButton value="time test" update="msg" actionListener="#{index.processTimeTest()}" ajax="false" styleClass="ui-priority-primary" />
+
+        </h:form>
             <p:chart type="line" model="#{chartView.lineModel1}" style="height:300px;"/>
+            <p:chart type="line" model="#{chartView.lineModel2}" style="height:300px;"/>
  
         </p:panel>
         

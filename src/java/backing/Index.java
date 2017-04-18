@@ -19,6 +19,7 @@ import static Control.Constants.*;
 import Control.Treshold;
 import data.TimeChartData;
 import javafx.util.Pair;
+
 /* test */
 /**
  *
@@ -58,7 +59,7 @@ public class Index {
 
     //helper class for loading data
     private DataLoader dl;
-    
+
     //loaded dataset
     private DataSet dataSet;
 
@@ -67,74 +68,81 @@ public class Index {
 
     //copy of item list for datatable view
     private List<Item> items;
-    
+
     //items in result datatable
     private List<Item> searchedItemsBruteforce;
-    
+
     //items in result datatable
     private List<Item> searchedItemsTreshold;
-    
+
     //names of table columns
     private List<String> columnNames;
 
     //agreagate function used in search
     private String agregateFunc;
-    
+
     //number of products to find
     private int k = 1;
-    
+
     //true id arrtib is used in agregate function
     private boolean[] choosenAttribs;
-    
+
     //names of selected attribs
     private String[] selectedAttribs;
 
     //true if normalization is shown
     private boolean showNormalization = false;
-    
+
     private long timeBruteforce = 0;
-    
+
     private long timeTreshold = 0;
-    
+
     private Bruteforce bf = new Bruteforce();
     private Treshold tr = new Treshold();
-        
+
     public Index() {
         //init values
         chosenDataSet = "notebooks-huge";
         agregateFunc = "max";
 
-       
-        
         items = new ArrayList<Item>();
         columnNames = new ArrayList<String>();
-         //loades default dataset
-         dl = new DataLoader();
+        selectedAttribs = new String [0];
+        //loades default dataset
+        dl = new DataLoader();
         loadData();
     }
-    public void processTimeTest(){
-        List<Pair<Integer,Integer> > times = new ArrayList<>();
+
+    public void processTimeTest() {
+        if (selectedAttribs.length==0) return;
+        
         int agregateFuncCode;
-        if (agregateFunc.equals("sum")){
+        if (agregateFunc.equals("sum")) {
             agregateFuncCode = AG_FUNC_SUM;
         } else if (agregateFunc.equals("min")) {
             agregateFuncCode = AG_FUNC_MIN;
-        } else if (agregateFunc.equals("max")){
+        } else if (agregateFunc.equals("max")) {
             agregateFuncCode = AG_FUNC_MAX;
-        } else return;
-        
+        } else {
+            return;
+        }
+
+        //K value TIME TEST
+        List<Pair<Integer, Integer>> bruteforceTimeLineK = new ArrayList<>();
+        List<Pair<Integer, Integer>> tresholdTimeLineK = new ArrayList<>();
+
         //set TRUE if the column is chosen for searching
         boolean[] tmp = new boolean[dataSet.getColumnNames().size()];
         for (String chosenAttrib : selectedAttribs) {
             for (int i = 0; i < columnNames.size(); i++) {
-                if (chosenAttrib.equals(columnNames.get(i))){
+                if (chosenAttrib.equals(columnNames.get(i))) {
                     tmp[i] = true;
                     break;
-                }                    
-            }                   
+                }
+            }
         }
-        
-        for (int i = 1; i < 100; i++) {
+
+        for (int i = 1; i < items.size(); i += items.size()/100) {
             long startTime = System.currentTimeMillis();
             bf.compute(dataSet.getItems(), tmp, i, agregateFuncCode);
             int bruteforceTime = (int) (System.currentTimeMillis() - startTime);
@@ -142,45 +150,75 @@ public class Index {
             startTime = System.currentTimeMillis();
             tr.compute(dataSet.getItems(), tmp, i, agregateFuncCode);
             int tresholdTime = (int) (System.currentTimeMillis() - startTime);
-            times.add(new Pair<Integer,Integer>(bruteforceTime,tresholdTime));
+
+            bruteforceTimeLineK.add(new Pair<Integer,Integer>(i,bruteforceTime));
+            tresholdTimeLineK.add(new Pair<Integer,Integer>(i,tresholdTime));
         }
-        TimeChartData.timeLines = times;
-        
+
+        TimeChartData.bruteforceTimeLineK = bruteforceTimeLineK;
+        TimeChartData.tresholdTimeLineK = tresholdTimeLineK;
+
+        //COLUMNS COUNT TIME TEST
+        List<Pair<Integer, Integer>> timeLine1 = new ArrayList<>();
+        List<Pair<Integer, Integer>> timeLine2 = new ArrayList<>();
+
+        choosenAttribs = new boolean[dataSet.getColumnNames().size()];
+        for (int i = 0; i < choosenAttribs.length; i++) {
+            choosenAttribs[i] = true;
+
+            long startTime = System.currentTimeMillis();
+            bf.compute(dataSet.getItems(), tmp, items.size() / 10, agregateFuncCode);
+            int bruteforceTime = (int) (System.currentTimeMillis() - startTime);
+
+            startTime = System.currentTimeMillis();
+            tr.compute(dataSet.getItems(), tmp, items.size() / 10, agregateFuncCode);
+            int tresholdTime = (int) (System.currentTimeMillis() - startTime);
+
+            timeLine1.add(new Pair<Integer, Integer>(i+1, bruteforceTime));
+            timeLine2.add(new Pair<Integer, Integer>(i+1, tresholdTime));
+
+        }
+        TimeChartData.bruteforceTimeLineColumns = timeLine1;
+        TimeChartData.tresholdTimeLineColumns = timeLine2;
+
     }
+
     public void loadData() {
         dataSet = dl.loadWithValues(chosenDataSet + ".csv");
         setItems(dataSet.getItems());
         setColumnNames(dataSet.getColumnNames());
-       
+
         choosenAttribs = new boolean[dataSet.getColumnNames().size()];
         tr.initData(items);
-        
+
     }
 
     public void search() {
-        
+        if (selectedAttribs.length == 0) return;
         int agregateFuncCode;
-        if (agregateFunc.equals("sum")){
+        if (agregateFunc.equals("sum")) {
             agregateFuncCode = AG_FUNC_SUM;
         } else if (agregateFunc.equals("min")) {
             agregateFuncCode = AG_FUNC_MIN;
-        } else if (agregateFunc.equals("max")){
+        } else if (agregateFunc.equals("max")) {
             agregateFuncCode = AG_FUNC_MAX;
-        } else return;
-        
+        } else {
+            return;
+        }
+
         //set TRUE if the column is chosen for searching
         boolean[] tmp = new boolean[dataSet.getColumnNames().size()];
         for (String chosenAttrib : selectedAttribs) {
             for (int i = 0; i < columnNames.size(); i++) {
-                if (chosenAttrib.equals(columnNames.get(i))){
+                if (chosenAttrib.equals(columnNames.get(i))) {
                     tmp[i] = true;
                     break;
-                }                    
-            }                   
+                }
+            }
         }
         System.out.println("AGRE " + agregateFuncCode);
         //computes indexes of searched items
-        
+
         long startTime = System.currentTimeMillis();
         List<Integer> res = bf.compute(dataSet.getItems(), tmp, k, agregateFuncCode);
         setTimeBruteforce(System.currentTimeMillis() - startTime);
@@ -188,13 +226,13 @@ public class Index {
         startTime = System.currentTimeMillis();
         List<Integer> resTr = tr.compute(dataSet.getItems(), tmp, k, agregateFuncCode);
         setTimeTreshold(System.currentTimeMillis() - startTime);
-        
+
         //finds items in dataset
         searchedItemsBruteforce = new ArrayList<>();
         for (int itemIndex : res) {
             searchedItemsBruteforce.add(dataSet.getItems().get(itemIndex));
         }
-        
+
         searchedItemsTreshold = new ArrayList<>();
         for (int itemIndex : resTr) {
             searchedItemsTreshold.add(dataSet.getItems().get(itemIndex));
@@ -333,6 +371,4 @@ public class Index {
         this.searchedItemsTreshold = searchedItemsTreshold;
     }
 
-    
-    
 }
