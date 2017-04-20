@@ -16,7 +16,10 @@ public class Item {
     
     //list of atributes for items
     private List<String> attr;
-    
+    private int id;
+    private float tmpAgateValueBruteforce;
+    private float tmpAgateValue;
+
     //list of normalize values for item
     private List<Float> values;
     
@@ -54,5 +57,47 @@ public class Item {
     }
     public int valuesCount(){
         return values.size();
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the tmpAgateValue
+     */
+    public float getTmpAgateValue() {
+        return tmpAgateValue;
+    }
+
+    /**
+     * @param tmpAgateValue the tmpAgateValue to set
+     */
+    public void setTmpAgateValue(float tmpAgateValue) {
+        this.tmpAgateValue = tmpAgateValue;
+    }
+
+    /**
+     * @return the tmpAgateValueBruteforce
+     */
+    public float getTmpAgateValueBruteforce() {
+        return tmpAgateValueBruteforce;
+    }
+
+    /**
+     * @param tmpAgateValueBruteforce the tmpAgateValueBruteforce to set
+     */
+    public void setTmpAgateValueBruteforce(float tmpAgateValueBruteforce) {
+        this.tmpAgateValueBruteforce = tmpAgateValueBruteforce;
     }
 }

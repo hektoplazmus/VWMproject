@@ -52,6 +52,7 @@ public class Treshold {
             sortedColumns.add(tmp);
         }
     }
+    
     public List<Integer> compute(List<Item> items, boolean[] columns, int k, int agregateFunc) {
         
         
@@ -111,6 +112,8 @@ public class Treshold {
                 }
 
                 float agFuncValue = ac.agFunc(agregateFunc, values);
+                
+                items.get(itemIndex).setTmpAgateValue(agFuncValue);
                 
                 resQueue.add(new Pair<Integer,Float>(itemIndex,agFuncValue));
                 if (resQueue.size() > k)

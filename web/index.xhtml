@@ -119,12 +119,20 @@
                          > 
                 <p:ajax event="rowSelect" />
 
+                <p:column>
+                    <h:outputText value="#{o.id}" />
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{o.tmpAgateValueBruteforce}" />
+                </p:column>
+                
+                
                 <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
                     <p:column headerText="#{index.columnNames.get(i)}" >
                         <h:outputText value="#{o.getAttr(i)}" />
                     </p:column>
                 </c:forEach>
-
+                
             </p:dataTable>
         </p:fieldset>
         
@@ -137,6 +145,13 @@
                          > 
                 <p:ajax event="rowSelect" />
 
+                <p:column>
+                    <h:outputText value="#{o.id}" />
+                </p:column>
+                
+                <p:column>
+                    <h:outputText value="#{o.tmpAgateValue}" />
+                </p:column>
                 <c:forEach var="i" begin="0" end="#{index.iterateIndex-1}">
                     <p:column headerText="#{index.columnNames.get(i)}" >
                         <h:outputText value="#{o.getAttr(i)}" />

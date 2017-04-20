@@ -94,6 +94,7 @@ public class DataLoader {
             }
             attribsToRecalculate = new boolean[nextLine.length];
             
+            int itemIndex = 0;
             while ((line = br.readLine()) != null) {
                 nextLine = line.split(",");
                 Item newItem = new Item();
@@ -102,16 +103,18 @@ public class DataLoader {
                     if (index != -1){
                         float value = Float.parseFloat(nextLine[i].substring(index+1));
                         newItem.addValue(value);
+                        newItem.setId(itemIndex);
                         newItem.addAttr(nextLine[i].substring(0,index));
                     } else{
                         attribsToRecalculate[i] = true;
                         newItem.addValue(Float.parseFloat(nextLine[i]));
+                        newItem.setId(itemIndex);
                         newItem.addAttr(nextLine[i]);
                     }
                     
                 }
                 dataSet.getItems().add(newItem);
-
+                   itemIndex++;
             }  
         } catch (IOException ex) {
             System.out.println("not loaded");

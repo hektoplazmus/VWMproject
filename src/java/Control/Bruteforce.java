@@ -38,6 +38,7 @@ public class Bruteforce {
                 }
             }
             float resultValue = ac.agFunc(agregateFunc,values);
+            items.get(i).setTmpAgateValueBruteforce(resultValue);
             tmp.add(new Pair<Integer, Float>(i, resultValue));
         }
 
