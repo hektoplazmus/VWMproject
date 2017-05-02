@@ -26,6 +26,8 @@ public class ChartView implements Serializable {
     private LineChartModel lineModel1;
     
     private LineChartModel lineModel2;
+    
+    private LineChartModel lineModel3;
 
     @PostConstruct
     public void init() {
@@ -39,6 +41,9 @@ public class ChartView implements Serializable {
     public LineChartModel getLineModel2() {
         return lineModel2;
     }
+    public LineChartModel getLineModel3() {
+        return lineModel3;
+    }
     
     private void createLineModels() {
         lineModel1 = initLinearModel();
@@ -49,6 +54,10 @@ public class ChartView implements Serializable {
         lineModel2 = initLinearModel2();
         lineModel2.setTitle("Number of columns chart");
         lineModel2.setLegendPosition("e");
+        
+        lineModel3 = initLinearModel3();
+        lineModel3.setTitle("dataset size time speed");
+        lineModel3.setLegendPosition("e");
          
     }
      
@@ -107,6 +116,37 @@ public class ChartView implements Serializable {
         yAxis.setLabel("time (ms)");
         Axis xAxis = model.getAxis(AxisType.X);
         xAxis.setLabel("selected columns");
+        
+        model.addSeries(series1);
+        model.addSeries(series2);
+         
+        return model;
+    }
+    
+    public LineChartModel initLinearModel3() {
+        LineChartModel model = new LineChartModel();
+        if (TimeChartData.bruteforceTimeLineDataset == null || TimeChartData.tresholdTimeLineDataset == null) return model;
+        LineChartSeries series1 = new LineChartSeries();
+        series1.setLabel("Bruteforce");
+        LineChartSeries series2 = new LineChartSeries();
+        series2.setLabel("Treshold");
+        
+        int maxVal = Integer.MIN_VALUE;
+        
+        for (int i = 0; i < TimeChartData.bruteforceTimeLineDataset.size(); i++) {
+            maxVal = Math.max(maxVal, TimeChartData.bruteforceTimeLineDataset.get(i).getValue());
+            maxVal = Math.max(maxVal, TimeChartData.tresholdTimeLineDataset.get(i).getValue());
+            
+            series1.set(TimeChartData.bruteforceTimeLineDataset.get(i).getKey(),TimeChartData.bruteforceTimeLineDataset.get(i).getValue());
+            series2.set(TimeChartData.tresholdTimeLineDataset.get(i).getKey(),TimeChartData.tresholdTimeLineDataset.get(i).getValue());
+        }
+        
+        Axis yAxis = model.getAxis(AxisType.Y);
+        yAxis.setMin(0);
+        yAxis.setMax(maxVal);
+        yAxis.setLabel("time (ms)");
+        Axis xAxis = model.getAxis(AxisType.X);
+        xAxis.setLabel("number of products");
         
         model.addSeries(series1);
         model.addSeries(series2);

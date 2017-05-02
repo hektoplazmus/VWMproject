@@ -19,5 +19,6 @@ public class TimeChartData {
     public static List<Pair<Integer,Integer> > bruteforceTimeLineColumns;
     public static List<Pair<Integer,Integer> > tresholdTimeLineColumns;
 
-
+    public static List<Pair<Integer,Integer> > bruteforceTimeLineDataset;
+    public static List<Pair<Integer,Integer> > tresholdTimeLineDataset;
 }

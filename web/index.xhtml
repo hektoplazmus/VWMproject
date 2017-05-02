@@ -30,12 +30,11 @@
                         <p:selectOneMenu value="#{index.chosenDataSet}" style="width:200px; float: left" 
                                          immediate="true"  >
                             <p:ajax  update="msg"/>
-                            <f:selectItem itemLabel="notebooks-huge" itemValue="notebooks-huge" />
-                            <f:selectItem itemLabel="notebooks-small" itemValue="notebooks-small" />
-                            <f:selectItem itemLabel="notebooks-large" itemValue="notebooks-large" />
-                            <f:selectItem itemLabel="notebooks-middle" itemValue="notebooks-middle" />
+                            <f:selectItem itemLabel="notebooks-10" itemValue="notebooks-10" />
+                            <f:selectItem itemLabel="notebooks-100" itemValue="notebooks-100" />
+                            <f:selectItem itemLabel="notebooks-10000" itemValue="notebooks-10000" />
+                            <f:selectItem itemLabel="notebooks-100000" itemValue="notebooks-100000" />
                             <f:selectItem itemLabel="notebooks-200000" itemValue="notebooks-200000" />
-                            <f:selectItem itemLabel="notebooks-500000" itemValue="notebooks-500000" />
 
                         </p:selectOneMenu>
                         <p:commandButton value="choose" update="msg" actionListener="#{index.loadData()}" ajax="false" styleClass="ui-priority-primary" />
@@ -171,6 +170,7 @@
             <p:commandButton value="time test" update="msg" actionListener="#{index.processTimeTest()}" ajax="false" styleClass="ui-priority-primary" />
 
         </h:form>
+            <p:chart type="line" model="#{chartView.lineModel3}" style="height:300px;"/>
             <p:chart type="line" model="#{chartView.lineModel1}" style="height:300px;"/>
             <p:chart type="line" model="#{chartView.lineModel2}" style="height:300px;"/>
  

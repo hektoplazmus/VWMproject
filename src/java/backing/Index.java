@@ -102,20 +102,22 @@ public class Index {
 
     public Index() {
         //init values
-        chosenDataSet = "notebooks-huge";
+        chosenDataSet = "notebooks-10000";
         agregateFunc = "max";
 
         items = new ArrayList<Item>();
         columnNames = new ArrayList<String>();
-        selectedAttribs = new String [0];
+        selectedAttribs = new String[0];
         //loades default dataset
         dl = new DataLoader();
         loadData();
     }
 
     public void processTimeTest() {
-        if (selectedAttribs.length==0) return;
-        
+        if (selectedAttribs.length == 0) {
+            return;
+        }
+
         int agregateFuncCode;
         if (agregateFunc.equals("sum")) {
             agregateFuncCode = AG_FUNC_SUM;
@@ -142,7 +144,7 @@ public class Index {
             }
         }
 
-        for (int i = 1; i < items.size(); i += items.size()/100) {
+        for (int i = 1; i < items.size(); i += items.size() / 100) {
             long startTime = System.currentTimeMillis();
             bf.compute(dataSet.getItems(), tmp, i, agregateFuncCode);
             int bruteforceTime = (int) (System.currentTimeMillis() - startTime);
@@ -151,8 +153,8 @@ public class Index {
             tr.compute(dataSet.getItems(), tmp, i, agregateFuncCode);
             int tresholdTime = (int) (System.currentTimeMillis() - startTime);
 
-            bruteforceTimeLineK.add(new Pair<Integer,Integer>(i,bruteforceTime));
-            tresholdTimeLineK.add(new Pair<Integer,Integer>(i,tresholdTime));
+            bruteforceTimeLineK.add(new Pair<Integer, Integer>(i, bruteforceTime));
+            tresholdTimeLineK.add(new Pair<Integer, Integer>(i, tresholdTime));
         }
 
         TimeChartData.bruteforceTimeLineK = bruteforceTimeLineK;
@@ -174,12 +176,58 @@ public class Index {
             tr.compute(dataSet.getItems(), tmp, items.size() / 10, agregateFuncCode);
             int tresholdTime = (int) (System.currentTimeMillis() - startTime);
 
-            timeLine1.add(new Pair<Integer, Integer>(i+1, bruteforceTime));
-            timeLine2.add(new Pair<Integer, Integer>(i+1, tresholdTime));
+            timeLine1.add(new Pair<Integer, Integer>(i + 1, bruteforceTime));
+            timeLine2.add(new Pair<Integer, Integer>(i + 1, tresholdTime));
 
         }
         TimeChartData.bruteforceTimeLineColumns = timeLine1;
         TimeChartData.tresholdTimeLineColumns = timeLine2;
+
+        
+        
+        timeLine1 = new ArrayList<>();
+        timeLine2 = new ArrayList<>();
+        
+        ArrayList<String> ds = new ArrayList<>();
+        ds.add("notebooks-10");
+        ds.add("notebooks-100");
+        ds.add("notebooks-10000");
+        ds.add("notebooks-100000");
+        ds.add("notebooks-200000");
+
+        for (String dataSetName : ds) {
+            dataSet = dl.loadWithValues(dataSetName + ".csv");
+            setItems(dataSet.getItems());
+            setColumnNames(dataSet.getColumnNames());
+            choosenAttribs = new boolean[dataSet.getColumnNames().size()];
+            tr.initData(items);
+
+            tmp = new boolean[dataSet.getColumnNames().size()];
+            for (String chosenAttrib : selectedAttribs) {
+                for (int i = 0; i < columnNames.size(); i++) {
+                    if (chosenAttrib.equals(columnNames.get(i))) {
+                        tmp[i] = true;
+                        break;
+                    }
+                }
+            }
+                    
+            long startTime = System.currentTimeMillis();
+            bf.compute(dataSet.getItems(), tmp, items.size() / 10, AG_FUNC_MAX);
+            int bruteforceTime = (int) (System.currentTimeMillis() - startTime);
+
+            startTime = System.currentTimeMillis();
+            tr.compute(dataSet.getItems(), tmp, items.size() / 10, AG_FUNC_MAX);
+            int tresholdTime = (int) (System.currentTimeMillis() - startTime);
+
+            
+            int size = Integer.parseInt(dataSetName.substring(dataSetName.lastIndexOf("-")+1));
+            timeLine1.add(new Pair<Integer, Integer>(size, bruteforceTime));
+            timeLine2.add(new Pair<Integer, Integer>(size, tresholdTime));
+
+        }
+        TimeChartData.bruteforceTimeLineDataset = timeLine1;
+        TimeChartData.tresholdTimeLineDataset = timeLine2;
 
     }
 
@@ -194,7 +242,9 @@ public class Index {
     }
 
     public void search() {
-        if (selectedAttribs.length == 0) return;
+        if (selectedAttribs.length == 0) {
+            return;
+        }
         int agregateFuncCode;
         if (agregateFunc.equals("sum")) {
             agregateFuncCode = AG_FUNC_SUM;
